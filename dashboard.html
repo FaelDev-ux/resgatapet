@@ -1,32 +1,65 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ResgataPets - Painel de voluntários</title>
-  <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-  <header class="header">
-    <h1 class="logo">ResgataPets</h1>
-    <nav class="nav">
-      <a href="index.html" class="nav-link">Início</a>
-      <a href="report.html" class="nav-link">Nova Denúncia</a>
-      <a href="dashboard.html" class="nav-link active">Painel</a>
-    </nav>
-  </header>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ResgataPets - Painel de voluntários</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <header class="header">
+      <h1 class="logo">ResgataPets</h1>
+      <nav class="nav">
+        <a href="index.html" class="nav-link">Início</a>
+        <a href="report.html" class="nav-link">Nova Denúncia</a>
+        <a href="dashboard.html" class="nav-link active">Painel</a>
+        <a href="faq.html" class="nav-link">FAQ</a>
+        <a href="sobre.html" class="nav-link">Sobre</a>
+      </nav>
+    </header>
 
-  <main class="main">
-    <section class="dashboard-section">
-      <h2 class="section-title">Painel de Voluntários</h2>
-      <p class="dashboard-description"> Visualize todas as denúncias e altere o status conforme o andamento.</p>
-      <div id="dashboard-reports" class="dashboard.reports">
-        <!-- script -->
-      </div>
-    </section>
-  </main>
+    <main class="main">
+      <section class="dashboard-section">
+        <h2 class="section-title">Painel de Voluntários</h2>
+        <p class="dashboard-description">
+          Visualize todas as denúncias e altere o status conforme o andamento.
+        </p>
+        <div class="dashboard-filters">
+          <div class="filter-group">
+            <label for="filter-type">Tipo:</label>
+            <select id="filter-type">
+              <option value="">Todos</option>
+              <option value="animal_perdido">Animal Perdido</option>
+              <option value="animal_abandonado">Animal Abandonado</option>
+              <option value="animal_ferido">Animal Ferido</option>
+              <option value="maus_tratos">Maus Tratos</option>
+              <option value="outros">Outros</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="filter-status">Status:</label>
+            <select id="filter-status">
+              <option value="">Todos</option>
+              <option value="open">Aberto</option>
+              <option value="in_progress">Em Progresso</option>
+              <option value="resolved">Resolvido</option>
+            </select>
+          </div>
+          <button id="btn-add-admin" class="btn btn-secondary">
+            Adicionar Admin
+          </button>
+        </div>
+        <div id="dashboard-reports" class="dashboard.reports">
+          <!-- script -->
+        </div>
+        <div id="pagination" class="pagination">
+          <!-- paginação -->
+        </div>
+      </section>
+    </main>
 
-  <script type="module" src="js/reports.js"></script>
-  <script type="module" src="js/app.js"></script>
-</body>
+    <script type="module" src="js/reports.js"></script>
+    <script type="module" src="js/users.js"></script>
+    <script type="module" src="js/app.js"></script>
+  </body>
 </html>
