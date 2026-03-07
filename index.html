@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ResgataPet - Página Inicial</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="header">
+    <h1 class="logo">
+      ResgataPet
+    </h1>
+    <nav class="nav">
+      <a href="index.html" class="nav-link active">
+        Início
+      </a>
+      <a href="report.html" class="nav-link">
+        Nova Denúncia
+      </a>
+      <a href="dashboard.html" class="nav-link">
+        Painel
+      </a>
+    </nav>
+  </header>
+
+  <main class="main">
+    <section class="map-section">
+      <h2 class="section-title">
+        Denúncias Recentes
+      </h2>
+      <div id="map" class="map-container"></div>
+    </section>
+    <section class="reports-list-section">
+      <h2 class="section-title">
+        Lista de Denúncias
+      </h2>
+      <div id="reports-list" class="reports-list">
+        <!-- script -->
+      </div>
+    </section>
+  </main>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20IN0qRuA8i7E010i274O34y7rXw8P5+gFgB7cI=" crossorigin=""></script>
+  <script src="js/reports.js"></script>
+  <script src="js/map.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      app.initIndexPage();
+    });
+  </script>
+</body>
+</html>

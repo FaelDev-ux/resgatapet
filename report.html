@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ResgataPet - Nova Denúncia</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+</head>
+<body>
+  <header class="header">
+    <h1 class="logo">ResgataPet</h1>
+    <nav class="nav">
+      <a href="index.html" class="nav-link">Início</a>
+      <a href="report.html" class="nav-link active">Nova Denúncia</a>
+      <a href="dashboard.html" class="nav-link">Painel</a>
+    </nav>
+  </header>
+
+  <main class="main main-form">
+    <section class="form-section">
+      <h2 class="section-title">Registrar Denúncia</h2>
+      <form id="report-form" class="report-form">
+        <div class="form-group">
+          <label for="description">Descrição da Denúncia</label>
+          <textarea name="description" id="description" rows="4" required placeholder="Descreva a denúncia ou o animal perdido."></textarea>
+        </div>
+        <div class="form-group">
+          <label for="image">Imagem</label>
+          <input type="file" name="image" id="image" accept="image/*">
+        </div>
+        <div class="form-group">
+          <label>Localização</label>
+          <p class="map-hint"> Clique no mapa para selecionar o local</p>
+          <div id="map-report" class="map-container map-container--report"></div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="latitude">Latitude</label>
+            <input type="text" id="latitude" name="latitude" required placeholder="Ex: -23.2342">
+          </div>
+          <div class="form-group">
+            <label for="longitude">Longitude</label>
+            <input type="text" id="longitude" name="longitude" required placeholder="Ex: -46.2342">
+          </div>
+        </div>
+        <div class="form-group">
+          <button class="btn btn-secondary" id="btn-geolocation" type="button">Usar Localização Atual</button>
+          <span id="geolocation-status" class="geolocation-status" aria-live="polite"></span>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Enviar Denúncia</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="js/reports.js"></script>
+    <script src="js/map.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            app.initReportPage();
+        });
+    </script>
+</body>
+</html>

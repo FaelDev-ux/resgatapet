@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ResgataPet - Painel de voluntários</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="header">
+    <h1 class="logo">ResgataPet</h1>
+    <nav class="nav">
+      <a href="index.html" class="nav-link">Início</a>
+      <a href="report.html" class="nav-link">Nova Denúncia</a>
+      <a href="dashboard.html" class="nav-link active">Painel</a>
+    </nav>
+  </header>
+
+  <main class="main">
+    <section class="dashboard-section">
+      <h2 class="section-title">Painel de Voluntários</h2>
+      <p class="dashboard-description"> Visualize todas as denúncias e altere o status conforme o andamento.</p>
+      <div id="dashboard-reports" class="dashboard.reports">
+        <!-- script -->
+      </div>
+    </section>
+  </main>
+
+  <script src="js/reports.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      app.initDashboardPage();
+    });
+  </script>
+</body>
+</html>
