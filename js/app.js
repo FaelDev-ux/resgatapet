@@ -236,7 +236,6 @@ var app = (function() {
                 var id = this.getAttribute('data-id');
                 var status = this.value;
                 reports.updateStatus(id, status);
-                // Atualiza o label visual se quiser; a lista já está atualizada no localStorage
             });
         });
     }
