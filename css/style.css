@@ -1,7 +1,8 @@
+/* Reset e variáveis */
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 :root {
@@ -21,94 +22,112 @@
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: var(--color-background);
-  color: var(--color-text);
-  line-height: 1.5;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--color-background);
+    color: var(--color-text);
+    line-height: 1.5;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Header */
 .header {
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark));
-  color: white;
-  padding: 1rem 1.5;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  box-shadow: var(--shadow);
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    color: white;
+    padding: 1rem 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    box-shadow: var(--shadow);
 }
 
 .logo {
-  font-size: 1.5rem;
-  font-weight: 700;
+    font-size: 1.5rem;
+    font-weight: 700;
 }
 
 .nav {
-  display: flex;
-  gap: 0.5rem;
+    display: flex;
+    gap: 0.5rem;
 }
 
 .nav-link {
-  color: rgba(255, 255, 255, 0.9);
-  text-decoration: none;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  transition: background 0.2s, color 0.2s;
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    transition: background 0.2s, color 0.2s;
 }
 
 .nav-link:hover {
-  background-color: rgba(255, 255, 255, 0.15);
-  color: white;
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
 }
 
 .nav-link.active {
-  background: rgba(255, 255, 255, 0.25);
-  color: white;
+    background: rgba(255, 255, 255, 0.25);
+    color: white;
 }
 
 /* Main */
+.main {
+    flex: 1;
+    padding: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
 
+.main-form {
+    max-width: 640px;
+}
+
+.section-title {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    color: var(--color-primary-dark);
+}
+
+/* Mapa */
 .map-section {
-  margin-bottom: 2rem;
+    margin-bottom: 2rem;
 }
 
 .map-container {
-  height: 400px;
-  width: 100%;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: var(--shadow);
-  border: 1px solid var(--color-border);
+    height: 400px;
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--color-border);
 }
 
 .map-container--report {
-  height: 320px;
-  cursor: crosshair;
+    height: 320px;
+    cursor: crosshair;
 }
 
 .map-hint {
-  font-size: 0.9rem;
-  color: var(--color-text-muted);
-  margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    margin-bottom: 0.5rem;
 }
 
 .geolocation-status {
-  display: inline-block;
-  margin-left: 0.75rem;
-  font-size: 0.875rem;
-  color: var(--color-text-muted);
+    display: inline-block;
+    margin-left: 0.75rem;
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
 }
 
 .geolocation-status--error {
-  color: #dc3545;
+    color: #dc3545;
 }
 
-/* Lista de denuncia*/
+/* Lista de denúncias (index) */
 .reports-list-section .section-title {
     margin-bottom: 1rem;
 }
@@ -177,99 +196,95 @@ body {
     box-shadow: var(--shadow);
 }
 
-/* Formulario */
-
+/* Formulário */
 .form-section {
-  background: var(--color-card);
-  padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: var(--shadow);
+    background: var(--color-card);
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
 }
 
 .report-form .form-group {
-  margin-bottom: 1.25rem;
+    margin-bottom: 1.25rem;
 }
 
 .report-form label {
-  display: block;
-  margin-bottom: 0.4rem;
-  font-weight: 500;
-  color: var(--color-text);
+    display: block;
+    margin-bottom: 0.4rem;
+    font-weight: 500;
+    color: var(--color-text);
 }
 
 .report-form input[type="text"],
 .report-form input[type="file"],
 .report-form textarea {
-  width: 100%;
-  padding: 0.6rem 0.75rem;
-  border: 1px solid var(--color-border);
-  border-radius: 6px;
-  font-size: 1rem;
-  font-family: inherit;
+    width: 100%;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    font-size: 1rem;
+    font-family: inherit;
 }
 
 .report-form textarea {
-  resize: vertical;
-  min-height: 80px;
+    resize: vertical;
+    min-height: 80px;
 }
 
 .report-form input:focus,
 .report-form textarea:focus {
-  outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.2);
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.2);
 }
 
 .form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
 }
 
 .form-actions {
-  margin-top: 1.5rem;
+    margin-top: 1.5rem;
 }
 
-/*botão*/
-
+/* Botões */
 .btn {
-  display: inline-block;
-  padding: 0.6rem 1.25rem;
-  border: none;
-  border-radius: 6px;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.2s, transform 0.1s;
+    display: inline-block;
+    padding: 0.6rem 1.25rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
 }
 
 .btn:active {
-  transform: scale(0.98);
+    transform: scale(0.98);
 }
 
 .btn-primary {
-  background: var(--color-primary);
-  color:white;
+    background: var(--color-primary);
+    color: white;
 }
 
 .btn-primary:hover {
-  background: var(--color-primary-dark);
+    background: var(--color-primary-dark);
 }
 
 .btn-secondary {
-  background: var(--color-border);
-  color: var(--color-text);
+    background: var(--color-border);
+    color: var(--color-text);
 }
 
 .btn-secondary:hover {
-  background: var(--color-border);
-  color: var(--color-text);
-  opacity: 0.9;
+    background: #ced4da;
 }
 
 .btn-sm {
-  padding: 0.35rem 0.75rem;
-  font-size: 0.875rem;
+    padding: 0.35rem 0.75rem;
+    font-size: 0.875rem;
 }
 
 /* Dashboard */
@@ -336,40 +351,46 @@ body {
     box-shadow: var(--shadow);
 }
 
-/*leaflet*/
-
+/* Leaflet popup customizado */
 .leaflet-popup-content-wrapper {
-  border-radius: 8px;
-  box-shadow: var(--shadow-hover);
+    border-radius: 8px;
+    box-shadow: var(--shadow-hover);
 }
 
 .popup-content .popup-description {
-  margin-bottom: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.popup-content .popup-image {
+    max-width: 100%;
+    max-height: 200px;
+    border-radius: 6px;
+    margin: 0.5rem 0;
+    object-fit: cover;
 }
 
 .popup-content .popup-meta {
-  font-size: 0.85rem;
-  color: var(--color-text-muted);
-  margin-top: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    margin-top: 0.5rem;
 }
 
-/*resposividade*/
-
+/* Responsivo */
 @media (max-width: 768px) {
-  .header {
-    flex-direction: column;
-    align-items: stretch;
-  }
+    .header {
+        flex-direction: column;
+        align-items: stretch;
+    }
 
-  .nav {
-    justify-content: center;
-  }
+    .nav {
+        justify-content: center;
+    }
 
-  .form-row {
-    grid-template-columns: 1fr;
-  }
+    .form-row {
+        grid-template-columns: 1fr;
+    }
 
-  .map-container {
-    height: 300px;
-  }
+    .map-container {
+        height: 300px;
+    }
 }
