@@ -48,9 +48,29 @@ body {
   box-shadow: var(--shadow);
 }
 
+/* logo container now holds image and optional text */
 .logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   font-size: 1.5rem;
   font-weight: 700;
+  text-decoration: none; /* when wrapped in an anchor */
+  color: inherit;
+}
+
+/* logo image sizing */
+.logo img {
+  height: 40px;
+  width: auto;
+  display: block;
+  border-radius: 50%; /* make the logo circular */
+  object-fit: cover; /* ensure it fills the round shape */
+}
+
+/* optional text next to logo if needed */
+.logo-text {
+  display: inline-block;
 }
 
 .nav {
