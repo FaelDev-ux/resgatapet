@@ -33,6 +33,7 @@ const reports = {
   save: async function(reportData) {
     try {
       const newReport = {
+        type: reportData.type,
         description: reportData.description,
         latitude: reportData.latitude,
         longitude: reportData.longitude,
