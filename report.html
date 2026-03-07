@@ -14,6 +14,8 @@
       <a href="index.html" class="nav-link">Início</a>
       <a href="report.html" class="nav-link active">Nova Denúncia</a>
       <a href="dashboard.html" class="nav-link">Painel</a>
+      <a href="faq.html" class="nav-link">FAQ</a>
+      <a href="sobre.html" class="nav-link">Sobre</a>
     </nav>
   </header>
 
@@ -21,6 +23,17 @@
     <section class="form-section">
       <h2 class="section-title">Registrar Denúncia</h2>
       <form id="report-form" class="report-form">
+        <div class="form-group">
+          <label for="type">Tipo de Denúncia</label>
+          <select name="type" id="type" required>
+            <option value="">Selecione o tipo</option>
+            <option value="animal_perdido">Animal Perdido</option>
+            <option value="animal_abandonado">Animal Abandonado</option>
+            <option value="animal_ferido">Animal Ferido</option>
+            <option value="maus_tratos">Maus Tratos</option>
+            <option value="outros">Outros</option>
+          </select>
+        </div>
         <div class="form-group">
           <label for="description">Descrição da Denúncia</label>
           <textarea name="description" id="description" rows="4" required placeholder="Descreva a denúncia ou o animal perdido."></textarea>

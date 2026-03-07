@@ -3,9 +3,8 @@ import { collection, getDocs, addDoc, updateDoc, doc } from "https://www.gstatic
 
 const COLLECTION_NAME = "users";
 
-//obj users com os métodos e conexões com o firebase
 
-// Tipos de usuário (roles):
+// Tipos de usuário:
 // - user: Usuário comum, pode registrar denúncias
 // - volunteer: Voluntário, pode visualizar denúncias e ajudar no resgate
 // - moderator: Moderador, pode editar status de denúncias
