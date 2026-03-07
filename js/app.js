@@ -1,3 +1,5 @@
+import { db, storage } from "./firebase.js";
+
 var app = (function() {
   var STATUS_LABELS = {
     open: 'Aberto',
@@ -13,7 +15,7 @@ var app = (function() {
       mapModule.init();
     }
     var reportsList = reports.getAll();
-    if (typeof mapModule !== 'indefined') {
+    if (typeof mapModule !== 'undefined') {
       mapModule.updateMarkers(reportsList);
     }
     renderReportsList(reportsList);
@@ -56,7 +58,7 @@ var app = (function() {
     var btnGeolocation = document.getElementById('btn-geolocation');
     var imageInput = document.getElementById('image');
 
-    if (typeof madModule !== 'undefined' && document.getElementById('map-report')) {
+    if (typeof mapModule !== 'undefined' && document.getElementById('map-report')) {
       mapModule.initReportMap();
     }
 
@@ -89,7 +91,7 @@ var app = (function() {
     }
 
     if (!navigator.geolocation) {
-      satStatus('Seu navegador não suporta GeoLocalização.', true);
+      setStatus('Seu navegador não suporta GeoLocalização.', true);
       return;
     }
 
@@ -260,4 +262,25 @@ var app = (function() {
     };
   }
   
-);
+)();
+
+/*
+*   Roteador centralizado para carregar cada pág correspondente
+*/
+
+document.addEventListener('DOMContentLoaded',() => {
+  const path = window.location.pathname;
+
+  if(path.includes('index.html') || path === '/' || path.endsWith('/')) {
+    console.log('index carregada');
+    app.initIndexPage();
+  } else if (path.includes('dashboard.html')) {
+    console.log('dashboard carregada');
+    app.initDashboardPage();
+  } else if (path.includes('report.html')) {
+    console.log('report carregada');
+    app.initReportPage();
+  }
+});
+
+export { app };
