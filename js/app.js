@@ -10,11 +10,11 @@ var app = (function() {
   /**
    * Inicia a página inicial (mapa + lista)
    */
-  function initIndexPage() {
+  async function initIndexPage() {
     if (typeof mapModule !== 'undefined' && document.getElementById('map')) {
       mapModule.init();
     }
-    var reportsList = reports.getAll();
+    var reportsList = await reports.getAll();
     if (typeof mapModule !== 'undefined') {
       mapModule.updateMarkers(reportsList);
     }
@@ -176,15 +176,20 @@ var app = (function() {
   /**
   * Salvar denuncia e mandar para index
   */
-  function saveReportAndRedirect(description, latitude, longitude, imageData) {
-    reports.save({
-      description: description,
-      latitude: latitude,
-      longitude: longitude,
-      image: imageData,
-      status: 'open'
-    });
-    window.location.href = 'index.html';
+  async function saveReportAndRedirect(description, latitude, longitude, imageData) {
+    try{
+      await reports.save({
+        description: description,
+        latitude: latitude,
+        longitude: longitude,
+        image: imageData,
+        status: 'open'
+      });
+      window.location.href = 'index.html';
+    } catch (error) {
+      console.error("Erro ao salvar:", error);
+      alert("Houve um erro ao enviar a denúncia. Tente novamente.");
+    }
   }
 
   /**
@@ -201,11 +206,11 @@ var app = (function() {
    * Carrega as denuncias no painel
    */
 
-  function renderDashboardReports() {
+  async function renderDashboardReports() {
     var container = document.getElementById('dashboard-reports');
     if (!container) return;
 
-    var reportsList = reports.getAll();
+    var reportsList = await reports.getAll();
     if (!reportsList || reportsList.length === 0) {
       container.innerHTML = '<p class="dashboard-empty">Nenhuma denúncia registrada.</p>';
       return;    
