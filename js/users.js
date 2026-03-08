@@ -1,29 +1,129 @@
-import { db } from "./firebase.js";
-import { collection, getDocs, addDoc, updateDoc, doc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+// js/users.js
+import { auth, db } from "./firebase.js";
+import {
+  signInAnonymously,
+  signInWithPopup,
+  GoogleAuthProvider,
+  signOut,
+  onAuthStateChanged,
+} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+import {
+  collection,
+  getDocs,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
 const COLLECTION_NAME = "users";
+const provider = new GoogleAuthProvider();
 
-
-// Tipos de usuário:
-// - user: Usuário comum, pode registrar denúncias
-// - volunteer: Voluntário, pode visualizar denúncias e ajudar no resgate
-// - moderator: Moderador, pode editar status de denúncias
-// - admin: Administrador, pode gerenciar usuários e tudo
+// Variável para armazenar o estado atual do usuário na memória durante a navegação
+let currentUserData = null;
 
 const users = {
   /**
-   * Busca todos os usuários no Firestore
+   * Inicializa o observador de autenticação
+   * @param {Function} callback Função chamada quando o estado de auth muda
+   */
+  initAuth: function (callback) {
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        // Se for login anônimo(usuários comuns que vão fazer a denúncia e tals), define a role como 'user' e não salva no Firestore
+        if (user.isAnonymous) {
+          currentUserData = { uid: user.uid, role: "user", isAnonymous: true };
+          console.log("Usuário Anônimo logado:", currentUserData.uid);
+        } else {
+          // Se for login com Google, busca os dados da role no Firestore
+          const userRef = doc(db, COLLECTION_NAME, user.uid);
+          const userSnap = await getDoc(userRef);
+
+          if (userSnap.exists()) {
+            // O usuário já existe no banco, carrega os dados e a role dele
+            currentUserData = {
+              uid: user.uid,
+              ...userSnap.data(),
+              isAnonymous: false,
+            };
+            console.log("Usuário Google logado. Role:", currentUserData.role);
+          } else {
+            // É o primeiro login deste usuário com o Google. Cria o registro no Firestore com a role padrão 'user'. Um admin precisará mudar a role dele no painel para 'volunteer' ou 'admin'.
+            const newUser = {
+              email: user.email,
+              name: user.displayName,
+              role: "user",
+              created_at: new Date().toISOString(),
+            };
+            await setDoc(userRef, newUser); //referencia do auth do firebase e dados dele para o firestore
+            currentUserData = { uid: user.uid, ...newUser, isAnonymous: false };
+            console.log("Novo usuário Google registrado.");
+          }
+        }
+      } else {
+        // Se não houver usuário na sessão, limpa a memória e faz login anônimo imediatamente
+        currentUserData = null;
+        this.loginAnonymous();
+      }
+
+      // Retorna os dados do usuário para o app.js decidir o que mostrar/esconder na tela em um futuro bem breve
+      if (callback) callback(currentUserData);
+    });
+  },
+
+  /**
+   * Login Anônimo (usado silenciosamente para o público geral)
+   */
+  loginAnonymous: async function () {
+    try {
+      await signInAnonymously(auth);
+    } catch (error) {
+      console.error("Erro no login anônimo:", error);
+    }
+  },
+
+  /**
+   * Login com Google (disparado ao clicar no botão de Login por voluntários/admins)
+   */
+  loginGoogle: async function () {
+    try {
+      await signInWithPopup(auth, provider);
+    } catch (error) {
+      console.error("Erro no login com Google:", error);
+    }
+  },
+
+  /**
+   * Faz o logout do usuário (voltando automaticamente para anônimo pelo onAuthStateChanged)
+   */
+  logout: async function () {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error("Erro ao fazer logout:", error);
+    }
+  },
+
+  /**
+   * Retorna os dados do usuário logado atualmente (útil para proteções de rota síncronas)
+   */
+  getCurrentUser: function () {
+    return currentUserData;
+  },
+
+  /**
+   * Busca todos os usuários no Firestore (Apenas para Admins montarem o painel)
    * @returns {Promise<Array>} Lista de usuários
    */
-  getAll: async function() {
+  getAll: async function () {
     try {
       const querySnapshot = await getDocs(collection(db, COLLECTION_NAME));
       const usersList = [];
-      
+
       querySnapshot.forEach((doc) => {
         usersList.push({ id: doc.id, ...doc.data() });
       });
-      
+
       return usersList;
     } catch (error) {
       console.error("Erro ao buscar usuários:", error);
@@ -32,37 +132,15 @@ const users = {
   },
 
   /**
-   * Salva um novo usuário no Firestore
-   * @param {Object} userData Dados do usuário
+   * Atualiza a role de um usuário no Firestore (Apenas para Admins)
+   * @param {String} uid ID do documento no Firebase (que agora é o próprio UID do Auth)
+   * @param {String} newRole Nova role ('user', 'volunteer', 'admin')
    */
-  save: async function(userData) {
+  updateRole: async function (uid, newRole) {
     try {
-      const newUser = {
-        email: userData.email,
-        role: userData.role || 'user',
-        created_at: new Date().toISOString()
-      };
-
-      const docRef = await addDoc(collection(db, COLLECTION_NAME), newUser);
-      console.log("Usuário salvo com ID:", docRef.id);
-      
-      return { id: docRef.id, ...newUser };
-    } catch (error) {
-      console.error("Erro ao salvar usuário:", error);
-      throw error;
-    }
-  },
-
-  /**
-   * Atualiza o role de um usuário no Firestore
-   * @param {String} id ID do documento no Firebase
-   * @param {String} newRole Novo role
-   */
-  updateRole: async function(id, newRole) {
-    try {
-      const userRef = doc(db, COLLECTION_NAME, id);
+      const userRef = doc(db, COLLECTION_NAME, uid);
       await updateDoc(userRef, {
-        role: newRole
+        role: newRole,
       });
       console.log("Role atualizado com sucesso!");
       return true;
@@ -70,7 +148,7 @@ const users = {
       console.error("Erro ao atualizar role:", error);
       return false;
     }
-  }
+  },
 };
 
 window.users = users; //jogando o obj pro escopo global também
