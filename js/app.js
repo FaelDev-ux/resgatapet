@@ -7,9 +7,16 @@ var app = (function() {
     resolved: 'Resolvido',
   };
 
-  /**
-   * Inicia a página inicial (mapa + lista)
-   */
+  var TYPE_LABELS = {
+    animal_perdido: 'Animal Perdido',
+    animal_abandonado: 'Animal Abandonado',
+    animal_ferido: 'Animal Ferido',
+    maus_tratos: 'Maus Tratos',
+    outros: 'Outros'
+  };
+
+  var currentPage = 1;
+
   async function initIndexPage() {
     if (typeof mapModule !== 'undefined' && document.getElementById('map')) {
       mapModule.init();
@@ -22,9 +29,31 @@ var app = (function() {
   }
 
   /**
-   * Renderiza a lista de denuncias
-   * @param {Array} reportsList
-  */
+   * Mostra formulário para adicionar admin
+   */
+  function showAddAdminForm() {
+    var email = prompt('Digite o email do novo usuário:');
+    if (!email) return;
+
+    var role = prompt('Digite o role (user, volunteer, moderator, admin):', 'user');
+    if (!role) role = 'user';
+
+    // Simples validação
+    if (!email.includes('@')) {
+      alert('Email inválido.');
+      return;
+    }
+
+    users.save({
+      email: email,
+      role: role
+    }).then(() => {
+      alert('Usuário adicionado com sucesso!');
+    }).catch(error => {
+      console.error('Erro ao adicionar usuário:', error);
+      alert('Erro ao adicionar usuário.');
+    });
+  }
 
   function renderReportsList(reportsList) {
     var container = document.getElementById('reports-list');
@@ -35,12 +64,26 @@ var app = (function() {
       return;
     }
 
+    function formatDate(isoString) {
+      if (!isoString) return '-';
+      var d = new Date(isoString);
+      return d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    }
+
+    function escapeHtml(text) {
+      if (!text) return '';
+      var div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
     container.innerHTML = reportsList.map(function(report) {
       var statusClass = 'status-' + report.status;
       var statusLabel = STATUS_LABELS[report.status] || report.status;
+      var typeLabel = TYPE_LABELS[report.type] || report.type;
       var dateStr = formatDate(report.created_at);
       return '<div class="report-card" data-id="' + report.id + '">' +
-          '<p class="report-description">' + escapeHtml(report.description) + '</p>' +
+          '<p class="report-description"><strong>' + typeLabel + ':</strong> ' + escapeHtml(report.description) + '</p>' +
           '<div class="report-meta">' +
           '<span class="report-status ' + statusClass + '">' + statusLabel + '</span>' +
           '<span>Data: ' + dateStr + '</span>' +
@@ -138,22 +181,23 @@ var app = (function() {
   function handleReportSubmit(e) {
     e.preventDefault();
     var form = e.target;
+    var type = form.type.value;
     var description = form.description.value.trim();
     var latitude = form.latitude.value.trim();
     var longitude = form.longitude.value.trim();
     var imageInput = document.getElementById('image');
 
-    if (!description || !latitude || !longitude) {
-      alert('Preencha descrição, latitude e longitude.');
+    if (!type || !description || !latitude || !longitude) {
+      alert('Preencha todos os campos obrigatórios.');
       return;
     }
 
     if (imageInput && imageInput.files && imageInput.files[0]) {
       readImageAsDataURL(imageInput.files[0], function(dataUrl) {
-        saveReportAndRedirect(description, latitude, longitude, dataUrl || '');
+        saveReportAndRedirect(type, description, latitude, longitude, dataUrl || '');
       });
     } else {
-      saveReportAndRedirect(description, latitude, longitude, '');
+      saveReportAndRedirect(type, description, latitude, longitude, '');
     }
   }
 
@@ -176,9 +220,10 @@ var app = (function() {
   /**
   * Salvar denuncia e mandar para index
   */
-  async function saveReportAndRedirect(description, latitude, longitude, imageData) {
+  async function saveReportAndRedirect(type, description, latitude, longitude, imageData) {
     try{
       await reports.save({
+        type: type,
         description: description,
         latitude: latitude,
         longitude: longitude,
@@ -199,6 +244,21 @@ var app = (function() {
     var container = document.getElementById('dashboard-reports');
     if (!container) return;
 
+    // Adicionar event listeners para filtros
+    var filterType = document.getElementById('filter-type');
+    var filterStatus = document.getElementById('filter-status');
+    var btnAddAdmin = document.getElementById('btn-add-admin');
+
+    if (filterType) {
+      filterType.addEventListener('change', renderDashboardReports);
+    }
+    if (filterStatus) {
+      filterStatus.addEventListener('change', renderDashboardReports);
+    }
+    if (btnAddAdmin) {
+      btnAddAdmin.addEventListener('click', showAddAdminForm);
+    }
+
     renderDashboardReports();
   }
 
@@ -208,57 +268,117 @@ var app = (function() {
 
   async function renderDashboardReports() {
     var container = document.getElementById('dashboard-reports');
+    var paginationContainer = document.getElementById('pagination');
     if (!container) return;
 
-    var reportsList = await reports.getAll();
-    if (!reportsList || reportsList.length === 0) {
-      container.innerHTML = '<p class="dashboard-empty">Nenhuma denúncia registrada.</p>';
-      return;    
-  }
-  container.innerHTML = reportsList.map(function(report) {
-            var statusLabel = STATUS_LABELS[report.status] || report.status;
-            var dateStr = formatDate(report.created_at);
-            var imgHtml = report.image
-                ? '<img class="dashboard-card-image" src="' + report.image + '" alt="Imagem">'
-                : '';
-
-            var options = ['open', 'in_progress', 'resolved'].map(function(s) {
-                var selected = report.status === s ? ' selected' : '';
-                return '<option value="' + s + '"' + selected + '>' + (STATUS_LABELS[s] || s) + '</option>';
-            }).join('');
-
-            return '<div class="dashboard-card" data-id="' + report.id + '">' +
-                '<p class="dashboard-card-description">' + escapeHtml(report.description) + '</p>' +
-                '<p class="dashboard-card-meta">Data: ' + dateStr + '</p>' +
-                imgHtml +
-                '<div class="dashboard-card-actions">' +
-                '<label>Status: </label>' +
-                '<select class="dashboard-status-select" data-id="' + report.id + '">' + options + '</select>' +
-                '</div>' +
-                '</div>';
-        }).join('');
-
-        container.querySelectorAll('.dashboard-status-select').forEach(function(select) {
-            select.addEventListener('change', function() {
-                var id = this.getAttribute('data-id');
-                var status = this.value;
-                reports.updateStatus(id, status);
-            });
-        });
-    }
-
     function formatDate(isoString) {
-        if (!isoString) return '-';
-        var d = new Date(isoString);
-        return d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+      if (!isoString) return '-';
+      var d = new Date(isoString);
+      return d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
     }
 
     function escapeHtml(text) {
-        if (!text) return '';
-        var div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
+      if (!text) return '';
+      var div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
     }
+
+    var reportsList = await reports.getAll();
+
+    // Aplicar filtros
+    var filterType = document.getElementById('filter-type')?.value || '';
+    var filterStatus = document.getElementById('filter-status')?.value || '';
+
+    if (filterType) {
+      reportsList = reportsList.filter(r => r.type === filterType);
+    }
+    if (filterStatus) {
+      reportsList = reportsList.filter(r => r.status === filterStatus);
+    }
+
+    // Reset página se filtros mudaram
+    if (reportsList.length <= (currentPage - 1) * 10) {
+      currentPage = 1;
+    }
+
+    if (!reportsList || reportsList.length === 0) {
+      container.innerHTML = '<p class="dashboard-empty">Nenhuma denúncia encontrada com os filtros aplicados.</p>';
+      if (paginationContainer) paginationContainer.innerHTML = '';
+      return;    
+    }
+
+    // Paginação
+    var itemsPerPage = 10;
+    var totalPages = Math.ceil(reportsList.length / itemsPerPage);
+    var startIndex = (currentPage - 1) * itemsPerPage;
+    var endIndex = startIndex + itemsPerPage;
+    var paginatedReports = reportsList.slice(startIndex, endIndex);
+
+    container.innerHTML = paginatedReports.map(function(report) {
+      var statusLabel = STATUS_LABELS[report.status] || report.status;
+      var typeLabel = TYPE_LABELS[report.type] || report.type;
+      var dateStr = formatDate(report.created_at);
+      var imgHtml = report.image
+          ? '<img class="dashboard-card-image" src="' + report.image + '" alt="Imagem">'
+          : '';
+
+      var options = ['open', 'in_progress', 'resolved'].map(function(s) {
+          var selected = report.status === s ? ' selected' : '';
+          return '<option value="' + s + '"' + selected + '>' + (STATUS_LABELS[s] || s) + '</option>';
+      }).join('');
+
+      return '<div class="dashboard-card" data-id="' + report.id + '">' +
+          '<p class="dashboard-card-description"><strong>' + typeLabel + ':</strong> ' + escapeHtml(report.description) + '</p>' +
+          '<p class="dashboard-card-meta">Data: ' + dateStr + '</p>' +
+          imgHtml +
+          '<div class="dashboard-card-actions">' +
+          '<label>Status: </label>' +
+          '<select class="dashboard-status-select" data-id="' + report.id + '">' + options + '</select>' +
+          '</div>' +
+          '</div>';
+    }).join('');
+
+    container.querySelectorAll('.dashboard-status-select').forEach(function(select) {
+        select.addEventListener('change', function() {
+            var id = this.getAttribute('data-id');
+            var status = this.value;
+            reports.updateStatus(id, status);
+        });
+    });
+
+    // Renderizar paginação
+    if (paginationContainer && totalPages > 1) {
+      var paginationHtml = '<button class="btn btn-secondary" id="prev-page" ' + (currentPage === 1 ? 'disabled' : '') + '>Anterior</button>';
+      for (var i = 1; i <= totalPages; i++) {
+        paginationHtml += '<button class="btn ' + (i === currentPage ? 'btn-primary' : 'btn-secondary') + ' page-btn" data-page="' + i + '">' + i + '</button>';
+      }
+      paginationHtml += '<button class="btn btn-secondary" id="next-page" ' + (currentPage === totalPages ? 'disabled' : '') + '>Próximo</button>';
+      paginationContainer.innerHTML = paginationHtml;
+
+      // Event listeners para paginação
+      document.getElementById('prev-page')?.addEventListener('click', function() {
+        if (currentPage > 1) {
+          currentPage--;
+          renderDashboardReports();
+        }
+      });
+      document.getElementById('next-page')?.addEventListener('click', function() {
+        if (currentPage < totalPages) {
+          currentPage++;
+          renderDashboardReports();
+        }
+      });
+      document.querySelectorAll('.page-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          currentPage = parseInt(this.getAttribute('data-page'));
+          renderDashboardReports();
+        });
+      });
+    } else if (paginationContainer) {
+      paginationContainer.innerHTML = '';
+    }
+  }
 
     return {
         initIndexPage: initIndexPage,
