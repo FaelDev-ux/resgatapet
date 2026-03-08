@@ -315,6 +315,31 @@ body {
   font-size: 0.875rem;
 }
 
+.filters {
+  margin: 10px 0 15px 0;
+}
+
+.filter-btn {
+  padding: 6px 12px;
+  margin-right: 6px;
+  border: none;
+  background: #e0e0e0;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.filter-btn.active {
+  background: var(--color-primary);
+  color: white;
+  font-weight: bold;
+}
+
+.filter-btn:hover {
+  background: #cfcfcf;
+}
+
+
 /* Dashboard */
 .dashboard-description {
   margin-bottom: 1.5rem;

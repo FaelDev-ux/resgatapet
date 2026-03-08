@@ -16,16 +16,58 @@ var app = (function() {
   };
 
   var currentPage = 1;
+  
+  var currentListPage = 1;
+  var itemsPerPageList = 10;
+
+  var currentFilterDays = 'all';
+
+
+  /*Filtro por data */
+
+  function filterRecentReports(reportsList, days) {
+    const now = new Date();
+    return reportsList.filter(report => {
+      if (!report.created_at) return false;
+
+      const createdAt = new Date(report.created_at);
+      const diffTime = Math.abs(now - createdAt);
+      const diffDays = diffTime / (1000 * 60 * 60 * 24);
+
+      return diffDays <= days;
+    });
+  }
+
+  function setupFilterButtons() {
+    const buttons = document.querySelectorAll('.filter-btn');
+    buttons.forEach(button => {
+      button.addEventListener('click', function() {
+        buttons.forEach(btn => btn.classList.remove('active'));
+        this.classList.add('active');
+        const value = this.getAttribute('data-days');
+        currentFilterDays = value === 'all' ? 'all' : parseInt(value);
+        currentFilterDays = 1;
+        app.initIndexPage();
+      });
+    });
+  }
 
   async function initIndexPage() {
     if (typeof mapModule !== 'undefined' && document.getElementById('map')) {
       mapModule.init();
     }
+
     var reportsList = await reports.getAll();
+
+    if(currentFilterDays !== 'all') {
+      reportsList = filterRecentReports(reportsList, currentFilterDays);
+    }
+
     if (typeof mapModule !== 'undefined') {
       mapModule.updateMarkers(reportsList);
     }
     renderReportsList(reportsList);
+    setupFilterButtons();
   }
 
   /**
@@ -77,7 +119,12 @@ var app = (function() {
       return div.innerHTML;
     }
 
-    container.innerHTML = reportsList.map(function(report) {
+    const start = (currentListPage - 1) * itemsPerPageList;
+    const end = start + itemsPerPageList;
+    const paginatedReports = reportsList.slice(start, end);
+
+    // container.innerHTML = reportsList.map(function(report)
+    container.innerHTML = paginatedReports.map(function(report) {
       var statusClass = 'status-' + report.status;
       var statusLabel = STATUS_LABELS[report.status] || report.status;
       var typeLabel = TYPE_LABELS[report.type] || report.type;
@@ -90,7 +137,51 @@ var app = (function() {
           '</div>' +
           '</div>';
     }).join('');
-  }
+
+  /* pagination de denúncias */
+    const totalPagesList = Math.ceil(reportsList.length / itemsPerPageList);
+      let paginationHtml = '<div class="pagination">';
+
+      paginationHtml += '<button class="btn btn-secondary prev" ' + (  currentListPage === 1 ? 'disabled' : '') + '>Anterior</button>';
+
+      for (let i = 1; i <= totalPagesList; i++) {
+        paginationHtml += '<button class="btn ' + (i === currentListPage ? 'btn-primary' : 'btn-secondary') + ' page-btn" data-page="' + i + '">' + i + '</button>';
+      }
+
+        paginationHtml += '<button class="btn btn-secondary next" ' + (currentListPage === totalPagesList ? 'disabled' : '') + '>Próximo</button>';
+
+      paginationHtml += '</div>';
+
+      container.innerHTML += paginationHtml;
+
+      document.querySelectorAll('.page-btn').forEach(button => {
+        button.addEventListener('click', function() {
+          currentListPage = parseInt(this.getAttribute('data-page'));
+          renderReportsList(reportsList);
+        });
+      });
+
+      const prevBtn = container.querySelector('.prev');
+      const nextBtn = container.querySelector('.next');
+
+      if (prevBtn) {
+        prevBtn.addEventListener('click', function() {
+          if (currentListPage > 1) {
+            currentListPage--;
+            renderReportsList(reportsList);
+          }
+        });
+      }
+
+      if (nextBtn) {
+        nextBtn.addEventListener('click', function() {
+          if (currentListPage < totalPagesList) {
+            currentListPage++;
+            renderReportsList(reportsList);
+          }
+        });
+      }
+    }
 
   /**
    * inicia a pag da nova denuncia

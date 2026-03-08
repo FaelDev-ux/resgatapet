@@ -18,6 +18,8 @@ const reports = {
       querySnapshot.forEach((doc) => {
         reportsList.push({ id: doc.id, ...doc.data() });
       });
+
+      reportsList.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
       
       return reportsList;
     } catch (error) {
