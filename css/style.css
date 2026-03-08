@@ -99,7 +99,8 @@ body {
   color: white;
 }
 
-.logout-btn{
+.logout-btn {
+  display: none;
   cursor: pointer;
   color: rgb(255, 55, 55);
   border: 1px solid rgb(255, 55, 55);
@@ -359,7 +360,6 @@ body {
 .filter-btn:hover {
   background: #cfcfcf;
 }
-
 
 /* Dashboard */
 .dashboard-description {
@@ -709,7 +709,7 @@ body {
   font-size: 2.5rem;
 }
 
-.wrap-name-logo .logo{
+.wrap-name-logo .logo {
   width: 100%;
   max-width: 100px;
 }
@@ -745,7 +745,10 @@ body {
   padding: 0.85rem 1.5rem;
   font-size: 1.05rem;
   border-radius: 8px;
-  transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+  transition:
+    background 0.2s,
+    box-shadow 0.2s,
+    transform 0.1s;
 }
 
 .btn-google:hover {
@@ -778,7 +781,11 @@ body {
 /* Lado Direito (Informações/Imagem) */
 .login-right {
   flex: 1.2;
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-primary) 0%,
+    var(--color-primary-dark) 100%
+  );
   color: white;
   display: flex;
   align-items: center;
@@ -855,7 +862,7 @@ body {
   .login-right {
     display: none;
   }
-  
+
   .login-left {
     height: 100vh;
   }

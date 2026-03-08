@@ -489,6 +489,11 @@ var app = (function() {
 
 document.addEventListener('DOMContentLoaded',() => {
   const path = window.location.pathname;
+  // Esconder botão de logout por padrão só mostra se o user estiver logado
+  const logoutBtn = document.querySelector('.logout-btn');
+  const usernameMsg = document.querySelector('.username');
+  if (logoutBtn) logoutBtn.style.display = 'none';
+  if (usernameMsg) usernameMsg.style.display = 'none';
 
   users.initAuth(currentUser => {
 
@@ -526,16 +531,19 @@ document.addEventListener('DOMContentLoaded',() => {
     
     const logoutBtn = document.querySelector('.logout-btn');
     const usernameMsg = document.querySelector('.username');
-    // console.log(currentUser)
-    
-    if(currentUser) {
-      usernameMsg.innerText += currentUser.name;
-      usernameMsg.style.display = 'block';
-    } else if(!currentUser) {
-      usernameMsg.style.display = 'none';
-      logoutBtn.style.display = 'none';
+    // Esconder por padrão, só mostra se logado
+    if (logoutBtn) logoutBtn.style.display = 'none';
+    if (usernameMsg) usernameMsg.style.display = 'none';
+
+    if (currentUser) {
+      //
+      if (usernameMsg) {
+        usernameMsg.innerText = currentUser.name;
+        usernameMsg.style.display = 'block';
+      }
+      if (logoutBtn) logoutBtn.style.display = 'block';
     }
-    
+
     logoutBtn?.addEventListener('click', async () => {
       await users.logout();
       window.location.href = '/';
