@@ -1,4 +1,6 @@
 import { db, storage } from "./firebase.js";
+import { users } from './users.js';
+import { reports } from './reports.js';
 
 var app = (function() {
   var STATUS_LABELS = {
@@ -332,6 +334,7 @@ var app = (function() {
    * Inicia a pagina do painel
    */
   function initDashboardPage() {
+    document.querySelector('.main-dashboard').style.display = 'block';
     var container = document.getElementById('dashboard-reports');
     if (!container) return;
 
@@ -487,16 +490,59 @@ var app = (function() {
 document.addEventListener('DOMContentLoaded',() => {
   const path = window.location.pathname;
 
-  if(path.includes('index.html') || path === '/' || path.endsWith('/')) {
-    console.log('index carregada');
-    app.initIndexPage();
-  } else if (path.includes('dashboard.html')) {
-    console.log('dashboard carregada');
-    app.initDashboardPage();
-  } else if (path.includes('report.html')) {
-    console.log('report carregada');
-    app.initReportPage();
-  }
-});
+  users.initAuth(currentUser => {
+
+    if (path.includes('dashboard.html')) {
+      if(!currentUser) {
+        //acesso negado
+        window.location.href = '/login.html';
+        return;
+      } else if(currentUser.role === 'user'){
+        alert('Apenas voluntários cadastrados podem acessar este painel, entre em contato com nossa coordenadora para fazer parte da equipe!')
+        window.location.href = '/index.html';
+      }
+      app.initDashboardPage(currentUser);
+    } else if (path.includes('login.html')) {
+      if(currentUser && currentUser.role !== 'user') {
+        window.location.href = '/dashboard.html';
+        return;
+      } else if(currentUser && currentUser.role === 'user'){
+        alert('Você já está logado');
+        window.location.href = '/index.html';
+        return;
+      }
+
+      const btnGoogle = document.querySelector('#btn-login-google');
+      if(btnGoogle) { btnGoogle.addEventListener('click', users.loginGoogle)}
+    } else if (path.includes('report.html')) {
+      app.initReportPage();
+    } else {
+      app.initIndexPage();
+    }
+
+    /*
+    * nav dinâmica
+    */
+    
+    const logoutBtn = document.querySelector('.logout-btn');
+    const usernameMsg = document.querySelector('.username');
+    // console.log(currentUser)
+    
+    if(currentUser) {
+      usernameMsg.innerText += currentUser.name;
+      usernameMsg.style.display = 'block';
+    } else if(!currentUser) {
+      usernameMsg.style.display = 'none';
+      logoutBtn.style.display = 'none';
+    }
+    
+    logoutBtn?.addEventListener('click', async () => {
+      await users.logout();
+      window.location.href = '/';
+    })
+    
+  })
+  });
+
 
 export { app };

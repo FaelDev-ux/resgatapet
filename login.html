@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ResgataPets - Login</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="icon" type="image/x-icon" href="./images/favicon.ico" />
+    <script src="
+    https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js
+    "></script>
+    <link
+      href="
+    https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css
+    "
+      rel="stylesheet"
+    />
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const splide = new Splide(".splide", {
+          type: "fade",
+          arrows: false,
+          interval: 2000,
+          rewind: true,
+          perPage: 1,
+          autoplay: true,
+          lazyLoad: "nearby",
+        });
+        splide.mount();
+      });
+    </script>
+  </head>
+  <body class="login-body">
+    <div class="login-wrapper">
+      <div class="login-left">
+        <div class="login-content">
+          <div class="wrap-name-logo">
+            <img src="./images/logo.jpg" class="logo" alt="" />
+            <h1 class="logo login-logo">
+              Resgata<span style="color: #ff7043">Pets</span>
+            </h1>
+          </div>
+          <h2 class="login-title">Acesso Restrito</h2>
+          <p class="login-subtitle">
+            Faça login/cadastro para ter acesso ao painel de voluntários.
+          </p>
+
+          <div class="login-actions">
+            <button id="btn-login-google" class="btn btn-google">
+              <img
+                src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+                alt="Google Logo"
+                class="google-icon"
+              />
+              Entrar com Google
+            </button>
+          </div>
+
+          <a href="index.html" class="back-link"
+            >Voltar para a página inicial</a
+          >
+        </div>
+      </div>
+
+      <div class="login-right">
+        <div class="login-info">
+          <div class="login-slider">
+            <section class="splide" aria-label="container de slides">
+              <div class="splide__track">
+                <ul class="splide__list">
+                  <li class="splide__slide">
+                    <div class="splide__slide__container">
+                      <img
+                        class="login-image"
+                        src="https://media.istockphoto.com/id/1158201933/pt/foto/abandoned-dog-on-the-road.webp?a=1&b=1&s=612x612&w=0&k=20&c=VuLvhcfLTzU0TWpH_6mor7OxpUJlEFNRn_hNDbzSsCk="
+                      />
+                    </div>
+                  </li>
+                  <li class="splide__slide">
+                    <div class="splide__slide__container">
+                      <img
+                        class="login-image"
+                        src="https://images.unsplash.com/photo-1444212477490-ca407925329e?q=80&w=928&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                      />
+                    </div>
+                  </li>
+                  <li class="splide__slide">
+                    <div class="splide__slide__container">
+                      <img
+                        class="login-image"
+                        src="https://images.unsplash.com/photo-1553434133-96822a8e94af?q=80&w=865&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                      />
+                    </div>
+                  </li>
+                  <li class="splide__slide">
+                    <div class="splide__slide__container">
+                      <img
+                        class="login-image"
+                        src="https://images.unsplash.com/photo-1516280287949-2747a3304a2f?q=80&w=892&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                      />
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </section>
+          </div>
+
+          <div class="login-campaign">
+            <h2>Seja a voz de quem não pode pedir socorro.</h2>
+            <p>
+              Todos os dias, dezenas de animais enfrentam o abandono e o perigo
+              nas ruas. O <strong>ResgataPets</strong> nasceu para mapear esses
+              casos, mas a verdadeira transformação só acontece quando pessoas
+              como você decidem agir.
+            </p>
+            <p class="campaign-highlight">
+              Junte-se à nossa causa e transforme sua compaixão em ação real!
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="js/app.js"></script>
+  </body>
+</html>

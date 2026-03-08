@@ -1,7 +1,6 @@
-// js/users.js
 import { auth, db } from "./firebase.js";
 import {
-  signInAnonymously,
+  // signInAnonymously,
   signInWithPopup,
   GoogleAuthProvider,
   signOut,
@@ -30,12 +29,6 @@ const users = {
   initAuth: function (callback) {
     onAuthStateChanged(auth, async (user) => {
       if (user) {
-        // Se for login anônimo(usuários comuns que vão fazer a denúncia e tals), define a role como 'user' e não salva no Firestore
-        if (user.isAnonymous) {
-          currentUserData = { uid: user.uid, role: "user", isAnonymous: true };
-          console.log("Usuário Anônimo logado:", currentUserData.uid);
-        } else {
-          // Se for login com Google, busca os dados da role no Firestore
           const userRef = doc(db, COLLECTION_NAME, user.uid);
           const userSnap = await getDoc(userRef);
 
@@ -44,7 +37,6 @@ const users = {
             currentUserData = {
               uid: user.uid,
               ...userSnap.data(),
-              isAnonymous: false,
             };
             console.log("Usuário Google logado. Role:", currentUserData.role);
           } else {
@@ -56,14 +48,12 @@ const users = {
               created_at: new Date().toISOString(),
             };
             await setDoc(userRef, newUser); //referencia do auth do firebase e dados dele para o firestore
-            currentUserData = { uid: user.uid, ...newUser, isAnonymous: false };
+            currentUserData = { uid: user.uid, ...newUser };
             console.log("Novo usuário Google registrado.");
           }
-        }
       } else {
-        // Se não houver usuário na sessão, limpa a memória e faz login anônimo imediatamente
+        // Se não houver usuário na sessão, limpa a memória
         currentUserData = null;
-        this.loginAnonymous();
       }
 
       // Retorna os dados do usuário para o app.js decidir o que mostrar/esconder na tela em um futuro bem breve
@@ -74,13 +64,13 @@ const users = {
   /**
    * Login Anônimo (usado silenciosamente para o público geral)
    */
-  loginAnonymous: async function () {
-    try {
-      await signInAnonymously(auth);
-    } catch (error) {
-      console.error("Erro no login anônimo:", error);
-    }
-  },
+  // loginAnonymous: async function () {
+  //   try {
+  //     // await signInAnonymously(auth);
+  //   } catch (error) {
+  //     console.error("Erro no login anônimo:", error);
+  //   }
+  // },
 
   /**
    * Login com Google (disparado ao clicar no botão de Login por voluntários/admins)
@@ -88,6 +78,7 @@ const users = {
   loginGoogle: async function () {
     try {
       await signInWithPopup(auth, provider);
+      window.location = '/index.html'
     } catch (error) {
       console.error("Erro no login com Google:", error);
     }
