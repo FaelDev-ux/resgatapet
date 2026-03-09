@@ -3,6 +3,7 @@ var mapModule = (function() {
   var mainMap = null;
   var reportMap = null;
   var markers = [];
+  var markersById = {};
 
   /**
    * inicia o mapa principal na pag inicial
@@ -32,6 +33,7 @@ var mapModule = (function() {
     // Remove marcador antigo
     markers.forEach(marker => mainMap.removeLayer(marker));
     markers = [];
+    markersById = {};
 
     reportsList.forEach(report => {
       if (report.latitude && report.longitude) {
@@ -46,6 +48,9 @@ var mapModule = (function() {
           .bindPopup('<strong>' + getTypeLabel(report.type) + ':</strong><br>' + report.description + '<br><strong>Status:</strong> ' + getStatusLabel(report.status));
 
         markers.push(marker);
+        if (report.id) {
+          markersById[report.id] = marker;
+        }
       }
     });
   }
@@ -131,10 +136,32 @@ var mapModule = (function() {
     return labels[status] || status;
   }
 
+  /**
+   * Centraliza o mapa na denúncia selecionada
+   * @param {String} reportId ID da denuncia
+   * @param {Number} zoom zoom 15
+   */
+  function panToReport(reportId, zoom = 15) {
+    if (!mainMap || !reportId) return;
+    var marker = markersById[reportId];
+    if (!marker) return;
+
+    var latLng = marker.getLatLng();
+    // isso garante que a coordenada é um numero valido
+    var lat = parseFloat(latLng.lat);
+    var lng = parseFloat(latLng.lng);
+    if (Number.isNaN(lat) || Number.isNaN(lng)) return;
+
+    // Usa flyTo para deixar o mapa no meio da denuncia com uma animação de voo
+    mainMap.flyTo([lat, lng], zoom, { animate: true, duration: 1.0 });
+    marker.openPopup();
+  }
+
   return {
     init: init,
     updateMarkers: updateMarkers,
-    initReportMap: initReportMap
+    initReportMap: initReportMap,
+    panToReport: panToReport
   };
 })();
 
