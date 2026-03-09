@@ -147,16 +147,13 @@ var mapModule = (function() {
     if (!marker) return;
 
     var latLng = marker.getLatLng();
-    // Isso garante que a coordenada seja um número válido
+    // isso garante que a coordenada é um numero valido
     var lat = parseFloat(latLng.lat);
     var lng = parseFloat(latLng.lng);
     if (Number.isNaN(lat) || Number.isNaN(lng)) return;
-
-    // Usa o flyTo para centralizar o mapa de forma fluida
-    mainMap.flyTo([lat, lng], zoom, {
-      animate: true,
-      duration: 1.0
-    });
+    
+    // Usa flyTo para deixar o mapa no meio da denuncia com uma animação de voo
+    mainMap.flyTo([lat, lng], zoom, { animate: true, duration: 1.0 });
     marker.openPopup();
   }
 
