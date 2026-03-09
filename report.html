@@ -12,7 +12,7 @@
   <header class="header">
     <a href="index.html" class="logo">
       <img src="images/logo.jpg" alt="ResgataPets logo" />
-      <span class="logo-text">ResgataPets</span>
+      <span style="color: #2d6a4f" class="logo-text">Resgata<span style="color: #ff7043">Pets</span></span>
     </a>
     <nav class="nav">
         <p class="username">Olá, </p>
@@ -29,6 +29,9 @@
     <section class="form-section">
       <h2 class="section-title">Registrar Denúncia</h2>
       <form id="report-form" class="report-form">
+        <div class="form-grid-container">
+          
+      <div class="form-column-left">
         <div class="form-group">
           <label for="type">Tipo de Denúncia</label>
           <select name="type" id="type" required>
@@ -42,32 +45,37 @@
         </div>
         <div class="form-group">
           <label for="description">Descrição da Denúncia</label>
-          <textarea name="description" id="description" rows="4" required placeholder="Descreva a denúncia ou o animal perdido."></textarea>
+          <textarea name="description" id="description" rows="10" required placeholder="Descreva a denúncia ou o animal perdido."></textarea>
         </div>
         <div class="form-group">
           <label for="image">Imagem</label>
           <input type="file" name="image" id="image" accept="image/*">
         </div>
+      </div>
+
+      <div class="form-column-right">
         <div class="form-group">
           <label>Localização</label>
           <p class="map-hint"> Clique no mapa para selecionar o local</p>
           <div id="map-report" class="map-container map-container--report"></div>
           </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="latitude">Latitude</label>
-            <input type="text" id="latitude" name="latitude" required placeholder="Ex: -23.2342">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="latitude">Latitude</label>
+              <input type="text" id="latitude" name="latitude" required placeholder="Ex: -23.2342">
+            </div>
+            <div class="form-group">
+              <label for="longitude">Longitude</label>
+              <input type="text" id="longitude" name="longitude" required placeholder="Ex: -46.2342">
+            </div>
           </div>
           <div class="form-group">
-            <label for="longitude">Longitude</label>
-            <input type="text" id="longitude" name="longitude" required placeholder="Ex: -46.2342">
+            <button class="btn btn-secondary" id="btn-geolocation" type="button">Usar Localização Atual</button>
+            <span id="geolocation-status" class="geolocation-status" aria-live="polite"></span>
           </div>
         </div>
-        <div class="form-group">
-          <button class="btn btn-secondary" id="btn-geolocation" type="button">Usar Localização Atual</button>
-          <span id="geolocation-status" class="geolocation-status" aria-live="polite"></span>
         </div>
+      </div>
         <div class="form-actions">
           <button type="submit" class="btn btn-primary">Enviar Denúncia</button>
         </div>

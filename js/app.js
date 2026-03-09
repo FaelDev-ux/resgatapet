@@ -73,29 +73,84 @@ var app = (function() {
   }
 
   /**
-   * Mostra formulário para adicionar admin
+   * Mostra modal para gerenciar usuários
    */
-  function showAddAdminForm() {
-    var email = prompt('Digite o email do novo usuário:');
-    if (!email) return;
+  function showManageUsersForm() {
+    var modal = document.getElementById('manage-users-modal');
+    modal.style.display = 'block';
+    renderUsersList();
 
-    var role = prompt('Digite o role (user, volunteer, moderator, admin):', 'user');
-    if (!role) role = 'user';
+    // Event listener para fechar o modal
+    var closeBtn = document.querySelector('.close-modal');
+    if (closeBtn) {
+      closeBtn.onclick = function() {
+        modal.style.display = 'none';
+      };
+    }
 
-    // Simples validação
-    if (!email.includes('@')) {
-      alert('Email inválido.');
+    // Fechar modal clicando fora
+    window.onclick = function(event) {
+      if (event.target === modal) {
+        modal.style.display = 'none';
+      }
+    };
+  }
+
+  /**
+   * Renderiza a lista de usuários no modal
+   */
+  async function renderUsersList() {
+    var container = document.getElementById('modal-users-list');
+    if (!container) return;
+
+    var usersList = await users.getAll();
+
+    if (!usersList || usersList.length === 0) {
+      container.innerHTML = '<p class="dashboard-empty">Nenhum usuário encontrado.</p>';
       return;
     }
 
-    users.save({
-      email: email,
-      role: role
-    }).then(() => {
-      alert('Usuário adicionado com sucesso!');
-    }).catch(error => {
-      console.error('Erro ao adicionar usuário:', error);
-      alert('Erro ao adicionar usuário.');
+    function escapeHtml(text) {
+      if (!text) return '';
+      var div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    container.innerHTML = usersList.map(function(user) {
+      var roleOptions = ['user', 'volunteer', 'moderator', 'admin'].map(function(role) {
+        var selected = user.role === role ? 'selected' : '';
+        return '<option value="' + role + '" ' + selected + '>' + role + '</option>';
+      }).join('');
+
+      return '<div class="user-card">' +
+          '<div class="user-info">' +
+          '<div class="user-name">' + escapeHtml(user.name) + '</div>' +
+          '<div class="user-email">' + escapeHtml(user.email) + '</div>' +
+          '</div>' +
+          '<div class="user-role">' +
+          '<select class="role-select" data-uid="' + user.id + '">' +
+          roleOptions +
+          '</select>' +
+          '<button class="btn btn-primary update-role-btn" data-uid="' + user.id + '">Atualizar</button>' +
+          '</div>' +
+          '</div>';
+    }).join('');
+
+    // Adicionar event listeners para os botões de atualizar
+    document.querySelectorAll('.update-role-btn').forEach(function(btn) {
+      btn.addEventListener('click', async function() {
+        var uid = this.getAttribute('data-uid');
+        var select = document.querySelector('.role-select[data-uid="' + uid + '"]');
+        var newRole = select.value;
+
+        var success = await users.updateRole(uid, newRole);
+        if (success) {
+          alert('Cargo atualizado com sucesso!');
+        } else {
+          alert('Erro ao atualizar cargo.');
+        }
+      });
     });
   }
 
@@ -343,7 +398,7 @@ var app = (function() {
   /**
    * Inicia a pagina do painel
    */
-  function initDashboardPage() {
+  function initDashboardPage(currentUser) {
     document.querySelector('.main-dashboard').style.display = 'block';
     var container = document.getElementById('dashboard-reports');
     if (!container) return;
@@ -351,7 +406,7 @@ var app = (function() {
     // Adicionar event listeners para filtros
     var filterType = document.getElementById('filter-type');
     var filterStatus = document.getElementById('filter-status');
-    var btnAddAdmin = document.getElementById('btn-add-admin');
+    var btnManageUsers = document.getElementById('btn-manage-users');
 
     if (filterType) {
       filterType.addEventListener('change', renderDashboardReports);
@@ -359,8 +414,11 @@ var app = (function() {
     if (filterStatus) {
       filterStatus.addEventListener('change', renderDashboardReports);
     }
-    if (btnAddAdmin) {
-      btnAddAdmin.addEventListener('click', showAddAdminForm);
+    if (btnManageUsers && currentUser && currentUser.role === 'admin') {
+      btnManageUsers.style.display = 'block';
+      btnManageUsers.addEventListener('click', showManageUsersForm);
+    } else if (btnManageUsers) {
+      btnManageUsers.style.display = 'none';
     }
 
     renderDashboardReports();
@@ -499,6 +557,11 @@ var app = (function() {
 
 document.addEventListener('DOMContentLoaded',() => {
   const path = window.location.pathname;
+  // Esconder botão de logout por padrão só mostra se o user estiver logado
+  const logoutBtn = document.querySelector('.logout-btn');
+  const usernameMsg = document.querySelector('.username');
+  if (logoutBtn) logoutBtn.style.display = 'none';
+  if (usernameMsg) usernameMsg.style.display = 'none';
 
   users.initAuth(currentUser => {
 
@@ -536,16 +599,19 @@ document.addEventListener('DOMContentLoaded',() => {
     
     const logoutBtn = document.querySelector('.logout-btn');
     const usernameMsg = document.querySelector('.username');
-    // console.log(currentUser)
-    
-    if(currentUser) {
-      usernameMsg.innerText += currentUser.name;
-      usernameMsg.style.display = 'block';
-    } else if(!currentUser) {
-      usernameMsg.style.display = 'none';
-      logoutBtn.style.display = 'none';
+    // Esconder por padrão, só mostra se logado
+    if (logoutBtn) logoutBtn.style.display = 'none';
+    if (usernameMsg) usernameMsg.style.display = 'none';
+
+    if (currentUser) {
+      //
+      if (usernameMsg) {
+        usernameMsg.innerText += currentUser.name;
+        usernameMsg.style.display = 'block';
+      }
+      if (logoutBtn) logoutBtn.style.display = 'block';
     }
-    
+
     logoutBtn?.addEventListener('click', async () => {
       await users.logout();
       window.location.href = '/';
