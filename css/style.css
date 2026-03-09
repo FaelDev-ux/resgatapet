@@ -121,6 +121,7 @@ body {
 
 .logout-btn:hover {
   background: rgba(255, 55, 55, 0.73);
+  color: white;
 }
 
 .username {

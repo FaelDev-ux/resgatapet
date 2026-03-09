@@ -238,8 +238,17 @@ var app = (function() {
           }
         });
       }
-    }
-
+    //quando clicar na denuncia, o mapa vai centralizar nela e vai abrir um popup
+    container.querySelectorAll('.report-card').forEach(function(card) {
+      card.addEventListener('click', function()
+    {
+      var reportId = this.getAttribute('data-id');
+      if (typeof mapModule !== 'undefined' && mapModule.panToReport) {
+        mapModule.panToReport(reportId);
+      }
+    });
+    });
+  }
   /**
    * inicia a pag da nova denuncia
    */
