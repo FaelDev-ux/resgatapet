@@ -6,6 +6,13 @@
     <title>ResgataPets - Painel de voluntários</title>
     <link rel="stylesheet" href="css/style.css" />
     <link rel="icon" type="image/x-icon" href="./images/favicon.ico">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
   </head>
   <body>
     <header class="header">
@@ -14,13 +21,46 @@
         <span style="color: #2d6a4f" class="logo-text">Resgata<span style="color: #ff7043">Pets</span></span>
       </a>
       <nav class="nav">
-        <p class="username">Olá, </p>
-        <a href="index.html" class="nav-link"> Início </a>
-        <a href="report.html" class="nav-link"> Nova Denúncia </a>
-        <a href="dashboard.html" class="nav-link active"> Painel </a>
-        <a href="faq.html" class="nav-link"> FAQ </a>
-        <a href="sobre.html" class="nav-link"> Sobre </a>
-        <p class="nav-link logout-btn"> Sair </p>
+        <div class="wrap-username">
+          <p class="username">Olá,  </p>
+          <p class="nav-link logout-btn"> Sair </p>
+        </div>
+        <div class="wrap-links">
+          <a href="index.html" class="nav-link"> Início </a>
+          <a href="report.html" class="nav-link"> Nova Denúncia </a>
+          <a href="dashboard.html" class="nav-link active"> Painel </a>
+          <a href="faq.html" class="nav-link"> FAQ </a>
+          <a href="sobre.html" class="nav-link"> Sobre </a>
+        </div>
+      </nav>
+
+      <nav class="nav-mobile">
+        
+        <div class="menu-mobile home">
+          <i class="fa-solid fa-house"></i>
+          <a class="">Início</a>
+        </div><!--home-->
+
+        <div class="menu-mobile report">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <a class="">Denunciar</a>
+        </div><!--report-->
+        
+        <div class="menu-mobile mobile-active dashboard">
+          <i class="fa-solid fa-table-columns"></i>
+          <a class="">Painel</a>
+        </div><!--dashboard-->
+
+        <div class="menu-mobile faq">
+          <i class="fa-solid fa-circle-question"></i>
+          <a class="">FAQ</a>
+        </div><!--faq-->
+
+        <div class="menu-mobile about">
+          <i class="fa-solid fa-circle-info"></i>
+          <a class="">Sobre</a>
+        </div><!--about-->
+        
       </nav>
     </header>
 
@@ -30,6 +70,11 @@
         <p class="dashboard-description">
           Visualize todas as denúncias e altere o status conforme o andamento.
         </p>
+
+        <div class="username-mobile">
+          <p class="username">Olá, </p>
+          <p class="nav-link logout-btn">Sair</p>
+        </div>
         <div class="dashboard-filters">
           <div class="filter-group">
             <label for="filter-type">Tipo:</label>
@@ -55,7 +100,7 @@
             Gerenciar Usuários
           </button>
         </div>
-        <div id="dashboard-reports" class="dashboard.reports">
+        <div id="dashboard-reports" class="dashboard-reports">
           <!-- script -->
         </div>
         <div id="pagination" class="pagination">

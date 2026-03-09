@@ -6,29 +6,75 @@
     <title>ResgataPets - Página Inicial</title>
     <link
       rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      rel="stylesheet"
       href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
       integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
       crossorigin=""
     />
     <link rel="stylesheet" href="css/style.css" />
-    <link rel="icon" type="image/x-icon" href="./images/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="./images/favicon.ico" />
   </head>
   <body>
     <header class="header">
-    <a href="index.html" class="logo">
-      <img src="images/logo.jpg" alt="ResgataPets logo" />
-      <span style="color: #2d6a4f" class="logo-text">Resgata<span style="color: #ff7043">Pets</span></span>
-    </a>
-    <nav class="nav">
-        <p class="username">Olá, </p>
-        <a href="index.html" class="nav-link active"> Início </a>
-        <a href="report.html" class="nav-link"> Nova Denúncia </a>
-        <a href="dashboard.html" class="nav-link"> Painel </a>
-        <a href="faq.html" class="nav-link"> FAQ </a>
-        <a href="sobre.html" class="nav-link"> Sobre </a>
-        <p class="nav-link logout-btn"> Sair </p>
+      <a href="index.html" class="logo">
+        <img src="images/logo.jpg" alt="ResgataPets logo" />
+        <span style="color: #2d6a4f" class="logo-text"
+          >Resgata<span style="color: #ff7043">Pets</span></span
+        >
+      </a>
+      <nav class="nav">
+        <div class="wrap-username">
+          <p class="username">Olá,  </p>
+          <p class="nav-link logout-btn"> Sair </p>
+        </div>
+        <div class="wrap-links">
+          <a href="index.html" class="nav-link active"> Início </a>
+          <a href="report.html" class="nav-link"> Nova Denúncia </a>
+          <a href="dashboard.html" class="nav-link"> Painel </a>
+          <a href="faq.html" class="nav-link"> FAQ </a>
+          <a href="sobre.html" class="nav-link"> Sobre </a>
+        </div>
       </nav>
-  </header>
+
+      <nav class="nav-mobile">
+
+        <div class="menu-mobile mobile-active home">
+          <i class="fa-solid fa-house"></i>
+          <a class="">Início</a>
+        </div>
+        <!--home-->
+
+        <div class="menu-mobile report">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <a class="">Denunciar</a>
+        </div>
+        <!--report-->
+
+        <div class="menu-mobile dashboard">
+          <i class="fa-solid fa-table-columns"></i>
+          <a class="">Painel</a>
+        </div>
+        <!--dashboard-->
+
+        <div class="menu-mobile faq">
+          <i class="fa-solid fa-circle-question"></i>
+          <a class="">FAQ</a>
+        </div>
+        <!--faq-->
+
+        <div class="menu-mobile about">
+          <i class="fa-solid fa-circle-info"></i>
+          <a class="">Sobre</a>
+        </div>
+        <!--about-->
+      </nav>
+    </header>
 
     <main class="main">
       <section class="map-section">
