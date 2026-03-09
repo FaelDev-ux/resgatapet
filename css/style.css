@@ -7,9 +7,10 @@
 
 :root {
   --color-primary: #2d6a4f;
+  --color-secundary: #FF7043;
   --color-primary-dark: #1b4332;
   --color-accent: #40916c;
-  --color-background: #f8f9fa;
+  --color-background: #ebebeb;
   --color-card: #ffffff;
   --color-text: #212529;
   --color-text-muted: #6c757d;
@@ -33,12 +34,8 @@ body {
 
 /* Header */
 .header {
-  background: linear-gradient(
-    135deg,
-    var(--color-primary) 0%,
-    var(--color-primary-dark) 100%
-  );
-  color: white;
+  background: #fff;
+  color: var(--color-text);
   padding: 1rem 1.5rem;
   display: flex;
   flex-wrap: wrap;
@@ -46,10 +43,17 @@ body {
   justify-content: space-between;
   gap: 1rem;
   box-shadow: var(--shadow);
+  border-bottom: 4px solid;
+  border-image-source: linear-gradient(
+    135deg,
+    var(--color-primary) 50%,
+    var(--color-secundary) 60%
+  );
+  border-image-slice: 1;
 }
 
 /* logo container now holds image and optional text */
-.logo {
+.logo{
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -73,29 +77,37 @@ body {
   display: inline-block;
 }
 
+@media (max-width: 768px) {
+  .logo{
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 .nav {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 0.5rem;
 }
 
 .nav-link {
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--color-text);
   text-decoration: none;
   padding: 0.5rem 1rem;
-  border-radius: 6px;
+  border-radius: 20px;
   transition:
     background 0.2s,
     color 0.2s;
 }
 
 .nav-link:hover {
-  background: rgba(255, 255, 255, 0.15);
-  color: white;
+  color: var(--color-secundary);
+  background-color: #ececec8d;
 }
 
 .nav-link.active {
-  background: rgba(255, 255, 255, 0.25);
+  background: var(--color-secundary);
   color: white;
 }
 
@@ -136,7 +148,7 @@ body {
 .section-title {
   font-size: 1.25rem;
   margin-bottom: 1rem;
-  color: var(--color-primary-dark);
+  color: var(--color-primary);
 }
 
 /* Mapa */
@@ -145,12 +157,19 @@ body {
 }
 
 .map-container {
+  position: relative;
+  z-index: 2;
   height: 400px;
   width: 100%;
-  border-radius: 8px;
-  overflow: hidden;
   box-shadow: var(--shadow);
-  border: 1px solid var(--color-border);
+  border: 4px solid transparent;
+  border-radius: 12px;
+  background-image: 
+    linear-gradient(#fff, #fff), 
+    linear-gradient(135deg, var(--color-primary), var(--color-secundary)) !important;
+  background-origin: border-box !important;
+  background-clip: padding-box, border-box !important;
+  overflow: hidden;
 }
 
 .map-container--report {
@@ -187,6 +206,7 @@ body {
 }
 
 .report-card {
+  cursor: pointer;
   background: var(--color-card);
   padding: 1rem 1.25rem;
   border-radius: 8px;
@@ -247,9 +267,47 @@ body {
 /* Formulário */
 .form-section {
   background: var(--color-card);
+  border: 3px solid var(--color-primary);
+  border-image-slice: 1;
   padding: 1.5rem;
   border-radius: 8px;
   box-shadow: var(--shadow);
+}
+
+.form-column-left .form-group{
+  margin-bottom: 2rem !important;
+}
+
+.form-group select {
+  padding: 10px 20px;
+  outline: 0;
+  border: 2px solid var(--color-accent);
+  border-radius: 20px;
+  cursor: pointer;
+} 
+
+.form-grid-container {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: 1fr; 
+}
+
+@media (min-width: 992px) {
+  .form-grid-container {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width: 992px) {
+  .main-form {
+    max-width: 1000px;
+  }
+}
+
+.btn-block {
+  width: 100%;
+  padding: 0.8rem;
+  font-size: 1.1rem;
 }
 
 .report-form .form-group {
@@ -479,6 +537,7 @@ body {
   background: var(--color-card);
   border-radius: 8px;
   box-shadow: var(--shadow);
+  border-bottom: 3px solid var(--color-primary);
 }
 
 .filter-group {
@@ -606,10 +665,11 @@ body {
 }
 
 .faq-item {
-  background: var(--color-card);
   border-radius: 8px;
   padding: 1rem;
   box-shadow: var(--shadow);
+  background: var(--color-card);
+  border: 2px solid var(--color-primary);
 }
 
 .faq-question {
@@ -639,14 +699,18 @@ body {
 }
 
 .about-features {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  display: flex;
+  flex-direction: row;
   gap: 1.5rem;
+  justify-content: center;
   margin-bottom: 2rem;
+  flex-wrap: wrap;
 }
 
 .feature {
+  max-width: 300px;
   background: var(--color-card);
+  border: 2px solid var(--color-primary);
   border-radius: 8px;
   padding: 1.5rem;
   box-shadow: var(--shadow);

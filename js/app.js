@@ -596,7 +596,7 @@ document.addEventListener('DOMContentLoaded',() => {
     if (currentUser) {
       //
       if (usernameMsg) {
-        usernameMsg.innerText = currentUser.name;
+        usernameMsg.innerText += currentUser.name;
         usernameMsg.style.display = 'block';
       }
       if (logoutBtn) logoutBtn.style.display = 'block';
