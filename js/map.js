@@ -3,7 +3,7 @@ var mapModule = (function() {
   var mainMap = null;
   var reportMap = null;
   var markers = [];
-  var markersById = {};
+  var markersById= {};
 
   /**
    * inicia o mapa principal na pag inicial
@@ -137,9 +137,9 @@ var mapModule = (function() {
   }
 
   /**
-   * Centraliza o mapa na denúncia selecionada
-   * @param {String} reportId ID da denuncia
-   * @param {Number} zoom zoom 15
+   * Centraliza o mapa na denuncia selecionada
+   * @param {String} reportId ID da denúncia
+   * @param {Number} zoom Nível de zoom
    */
   function panToReport(reportId, zoom = 15) {
     if (!mainMap || !reportId) return;
@@ -151,7 +151,7 @@ var mapModule = (function() {
     var lat = parseFloat(latLng.lat);
     var lng = parseFloat(latLng.lng);
     if (Number.isNaN(lat) || Number.isNaN(lng)) return;
-
+    
     // Usa flyTo para deixar o mapa no meio da denuncia com uma animação de voo
     mainMap.flyTo([lat, lng], zoom, { animate: true, duration: 1.0 });
     marker.openPopup();

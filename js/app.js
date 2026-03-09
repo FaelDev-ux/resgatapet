@@ -238,18 +238,17 @@ var app = (function() {
           }
         });
       }
-
-    // Quando clicar na deunica, o mapa vai centralizar nela e abrir popup
+    //quando clicar na denuncia, o mapa vai centralizar nela e vai abrir um popup
     container.querySelectorAll('.report-card').forEach(function(card) {
-      card.addEventListener('click', function() {
-        var reportId = this.getAttribute('data-id');
-        if (typeof mapModule !== 'undefined' && mapModule.panToReport) {
-          mapModule.panToReport(reportId);
-        }
-      });
+      card.addEventListener('click', function()
+    {
+      var reportId = this.getAttribute('data-id');
+      if (typeof mapModule !== 'undefined' && mapModule.panToReport) {
+        mapModule.panToReport(reportId);
+      }
+    });
     });
   }
-
   /**
    * inicia a pag da nova denuncia
    */
@@ -599,17 +598,25 @@ document.addEventListener('DOMContentLoaded',() => {
     
     const logoutBtn = document.querySelector('.logout-btn');
     const usernameMsg = document.querySelector('.username');
+    const logoutBtnMobile = document.querySelector('.username-mobile .logout-btn');
+    const usernameMsgMobile = document.querySelector('.username-mobile .username');
     // Esconder por padrão, só mostra se logado
+    if (logoutBtnMobile) logoutBtnMobile.style.display = 'none';
+    if (usernameMsgMobile) usernameMsgMobile.style.display = 'none';
     if (logoutBtn) logoutBtn.style.display = 'none';
     if (usernameMsg) usernameMsg.style.display = 'none';
 
     if (currentUser) {
-      //
       if (usernameMsg) {
         usernameMsg.innerText += currentUser.name;
         usernameMsg.style.display = 'block';
       }
+      if (usernameMsgMobile) {
+        usernameMsgMobile.innerText += currentUser.name;
+        usernameMsgMobile.style.display = 'block';
+      }
       if (logoutBtn) logoutBtn.style.display = 'block';
+      if (logoutBtnMobile) logoutBtnMobile.style.display = 'block';
     }
 
     logoutBtn?.addEventListener('click', async () => {
@@ -617,8 +624,30 @@ document.addEventListener('DOMContentLoaded',() => {
       window.location.href = '/';
     })
     
+    logoutBtnMobile?.addEventListener('click', async () => {
+      await users.logout();
+      window.location.href = '/';
+    })
+    
   })
   });
 
+
+
+/**
+* Nav mobile
+*/
+
+const btnHome = document.querySelector('.nav-mobile .home');
+const btnDashboard = document.querySelector('.nav-mobile .dashboard');
+const btnFaq = document.querySelector('.nav-mobile .faq');
+const btnAbout = document.querySelector('.nav-mobile .about');
+const btnReport = document.querySelector('.nav-mobile .report');
+
+btnHome?.addEventListener('click', () => window.location.href = '/')
+btnDashboard?.addEventListener('click', () => window.location.href = '/dashboard.html')
+btnFaq?.addEventListener('click', () => window.location.href = '/faq.html')
+btnAbout?.addEventListener('click', () => window.location.href = '/sobre.html')
+btnReport?.addEventListener('click', () => window.location.href = '/report.html')
 
 export { app };
