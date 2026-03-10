@@ -40,6 +40,7 @@ var app = (function() {
     });
   }
 
+  //Filtro de data
   function setupFilterButtons() {
     const buttons = document.querySelectorAll('.filter-btn');
     buttons.forEach(button => {
@@ -48,17 +49,12 @@ var app = (function() {
         this.classList.add('active');
         const value = this.getAttribute('data-days');
         currentFilterDays = value === 'all' ? 'all' : parseInt(value);
-        currentFilterDays = 1;
-        app.initIndexPage();
+        renderIndexPageWithCurrentFilter();
       });
     });
   }
 
-  async function initIndexPage() {
-    if (typeof mapModule !== 'undefined' && document.getElementById('map')) {
-      mapModule.init();
-    }
-
+  async function renderIndexPageWithCurrentFilter() {
     var reportsList = await reports.getAll();
 
     if(currentFilterDays !== 'all') {
@@ -69,7 +65,15 @@ var app = (function() {
       mapModule.updateMarkers(reportsList);
     }
     renderReportsList(reportsList);
+  }
+
+  async function initIndexPage() {
+    if (typeof mapModule !== 'undefined' && document.getElementById('map')) {
+      mapModule.init();
+    }
+
     setupFilterButtons();
+    await renderIndexPageWithCurrentFilter();
   }
 
   /**
@@ -240,13 +244,20 @@ var app = (function() {
       }
     //quando clicar na denuncia, o mapa vai centralizar nela e vai abrir um popup
     container.querySelectorAll('.report-card').forEach(function(card) {
-      card.addEventListener('click', function()
-    {
-      var reportId = this.getAttribute('data-id');
-      if (typeof mapModule !== 'undefined' && mapModule.panToReport) {
-        mapModule.panToReport(reportId);
-      }
-    });
+      card.addEventListener('click', function() {
+        var reportId = this.getAttribute('data-id');
+        if (typeof mapModule !== 'undefined' && mapModule.panToReport) {
+          // Scroll até o mapa
+          var mapElement = document.getElementById('map');
+          if (mapElement) {
+            mapElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+          // Após o scroll, centraliza no marcador
+          setTimeout(function() {
+            mapModule.panToReport(reportId);
+          }, 550); // Isso é o tempo que leva pro scroll começar
+        }
+      });
     });
   }
   /**
