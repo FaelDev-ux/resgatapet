@@ -496,6 +496,7 @@ var app = (function() {
           '<div class="dashboard-card-actions">' +
           '<label>Status: </label>' +
           '<select class="dashboard-status-select" data-id="' + report.id + '">' + options + '</select>' +
+          '<button class="btn btn-danger delete-report-btn" data-id="' + report.id + '">Deletar</button>' +
           '</div>' +
           '</div>';
     }).join('');
@@ -505,6 +506,18 @@ var app = (function() {
             var id = this.getAttribute('data-id');
             var status = this.value;
             reports.updateStatus(id, status);
+        });
+    });
+
+    container.querySelectorAll('.delete-report-btn').forEach(function(btn) {
+        btn.addEventListener('click', async function() {
+            var id = this.getAttribute('data-id');
+            if (confirm('Tem certeza que deseja deletar esta denúncia?')) {
+                var success = await reports.delete(id);
+                if (success) {
+                    renderDashboardReports(); // Isso aqui recarrega a lista dps de deletar
+                }
+            }
         });
     });
 

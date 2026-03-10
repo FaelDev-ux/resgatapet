@@ -7,7 +7,7 @@
 
 :root {
   --color-primary: #2d6a4f;
-  --color-secundary: #FF7043;
+  --color-secundary: #ff7043;
   --color-primary-dark: #1b4332;
   --color-accent: #40916c;
   --color-background: #ebebeb;
@@ -147,8 +147,8 @@ body {
   background-color: #fff;
   border-top: 4px solid transparent;
   border-radius: 12px;
-  background-image: 
-    linear-gradient(#fff, #fff), 
+  background-image:
+    linear-gradient(#fff, #fff),
     linear-gradient(135deg, var(--color-primary), var(--color-secundary)) !important;
   background-origin: border-box !important;
   background-clip: padding-box, border-box !important;
@@ -233,8 +233,8 @@ body {
   box-shadow: var(--shadow);
   border: 4px solid transparent;
   border-radius: 12px;
-  background-image: 
-    linear-gradient(#fff, #fff), 
+  background-image:
+    linear-gradient(#fff, #fff),
     linear-gradient(135deg, var(--color-primary), var(--color-secundary)) !important;
   background-origin: border-box !important;
   background-clip: padding-box, border-box !important;
@@ -354,12 +354,12 @@ body {
   border: 2px solid var(--color-accent);
   border-radius: 20px;
   cursor: pointer;
-} 
+}
 
 .form-grid-container {
   display: grid;
   gap: 2rem;
-  grid-template-columns: 1fr; 
+  grid-template-columns: 1fr;
 }
 
 @media (min-width: 992px) {
@@ -460,6 +460,18 @@ body {
   background: #ced4da;
 }
 
+.btn-danger {
+  background: white;
+  color: #dc3545;
+  border: 1px solid #dc3545;
+  border-radius: 10px;
+}
+
+.btn-danger:hover {
+  background: #dc3545;
+  color: white;
+}
+
 .btn-sm {
   padding: 0.35rem 0.75rem;
   font-size: 0.875rem;
@@ -544,6 +556,10 @@ body {
   cursor: pointer;
 }
 
+.dashboard-card-actions .btn {
+  margin-left: 0.5rem;
+}
+
 .dashboard-empty {
   text-align: center;
   padding: 2rem;
@@ -588,7 +604,7 @@ body {
   }
 }
 
- @media (max-width: 790px) {
+@media (max-width: 790px) {
 
   .logo{
     width: 100%;
@@ -603,7 +619,7 @@ body {
   .nav {
     justify-content: center;
   }
-    
+
   .wrap-username{
     width: 100%;
     margin-bottom: 10px;
@@ -659,7 +675,7 @@ body {
   background: white;
   font-size: 0.9rem;
 }
-  
+
 #btn-manage-users {
   display: none;
 }
