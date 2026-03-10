@@ -63,7 +63,7 @@ var mapModule = (function() {
     if (!mapElement) return;
 
     var initialLat = -7.120354;
-    var initialLng = -34.880111;
+    var initialLng = -34.880111
 
     reportMap = L.map('map-report').setView([initialLat, initialLng], 13);
 
