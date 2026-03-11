@@ -40,6 +40,7 @@ var app = (function() {
     });
   }
 
+  //Filtro de data
   function setupFilterButtons() {
     const buttons = document.querySelectorAll('.filter-btn');
     buttons.forEach(button => {
@@ -48,17 +49,12 @@ var app = (function() {
         this.classList.add('active');
         const value = this.getAttribute('data-days');
         currentFilterDays = value === 'all' ? 'all' : parseInt(value);
-        currentFilterDays = 1;
-        app.initIndexPage();
+        renderIndexPageWithCurrentFilter();
       });
     });
   }
 
-  async function initIndexPage() {
-    if (typeof mapModule !== 'undefined' && document.getElementById('map')) {
-      mapModule.init();
-    }
-
+  async function renderIndexPageWithCurrentFilter() {
     var reportsList = await reports.getAll();
 
     if(currentFilterDays !== 'all') {
@@ -69,7 +65,64 @@ var app = (function() {
       mapModule.updateMarkers(reportsList);
     }
     renderReportsList(reportsList);
+  }
+
+  async function initIndexPage() {
+    if (typeof mapModule !== 'undefined' && document.getElementById('map')) {
+      mapModule.init();
+    }
+
     setupFilterButtons();
+    await renderIndexPageWithCurrentFilter();
+  }
+
+  /**
+   * Mostra popup de notificação
+   * @param {String} title Título da notificação
+   * @param {String} message Mensagem da notificação
+   * @param {String} type Tipo da notificação (success, error, warning)
+   */
+  function showNotification(title, message, type = 'success') {
+    var popup = document.getElementById('notification-popup');
+    var titleEl = document.getElementById('notification-title');
+    var messageEl = document.getElementById('notification-message');
+    var iconEl = document.querySelector('.notification-icon');
+
+    if (!popup || !titleEl || !messageEl || !iconEl) return;
+
+    // Define o ícone baseado no tipo
+    var icon = '✓';
+    if (type === 'error') icon = '✕';
+    if (type === 'warning') icon = '⚠';
+
+    iconEl.textContent = icon;
+    titleEl.textContent = title;
+    messageEl.textContent = message;
+
+    // Define a cor de acordo com o tipo
+    iconEl.style.color = type === 'success' ? '#28a745' : type === 'error' ? '#dc3545' : '#ffc107';
+
+    popup.style.display = 'flex';
+
+    // Evento para fechar
+    var closeBtn = document.querySelector('.close-notification');
+    if (closeBtn) {
+      closeBtn.onclick = function() {
+        popup.style.display = 'none';
+      };
+    }
+
+    // Fecha quando clica fora
+    popup.onclick = function(event) {
+      if (event.target === popup) {
+        popup.style.display = 'none';
+      }
+    };
+
+    // Fecha dps de 3 sec
+    setTimeout(function() {
+      popup.style.display = 'none';
+    }, 3000);
   }
 
   /**
@@ -240,13 +293,20 @@ var app = (function() {
       }
     //quando clicar na denuncia, o mapa vai centralizar nela e vai abrir um popup
     container.querySelectorAll('.report-card').forEach(function(card) {
-      card.addEventListener('click', function()
-    {
-      var reportId = this.getAttribute('data-id');
-      if (typeof mapModule !== 'undefined' && mapModule.panToReport) {
-        mapModule.panToReport(reportId);
-      }
-    });
+      card.addEventListener('click', function() {
+        var reportId = this.getAttribute('data-id');
+        if (typeof mapModule !== 'undefined' && mapModule.panToReport) {
+          // Scroll até o mapa
+          var mapElement = document.getElementById('map');
+          if (mapElement) {
+            mapElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+          // Após o scroll, centraliza no marcador
+          setTimeout(function() {
+            mapModule.panToReport(reportId);
+          }, 550); // Isso é o tempo que leva pro scroll começar
+        }
+      });
     });
   }
   /**
@@ -496,6 +556,7 @@ var app = (function() {
           '<div class="dashboard-card-actions">' +
           '<label>Status: </label>' +
           '<select class="dashboard-status-select" data-id="' + report.id + '">' + options + '</select>' +
+          '<button class="btn btn-danger delete-report-btn" data-id="' + report.id + '">Deletar</button>' +
           '</div>' +
           '</div>';
     }).join('');
@@ -505,6 +566,21 @@ var app = (function() {
             var id = this.getAttribute('data-id');
             var status = this.value;
             reports.updateStatus(id, status);
+        });
+    });
+
+    container.querySelectorAll('.delete-report-btn').forEach(function(btn) {
+        btn.addEventListener('click', async function() {
+            var id = this.getAttribute('data-id');
+            if (confirm('Tem certeza que deseja deletar esta denúncia?')) {
+                var success = await reports.delete(id);
+                if (success) {
+                    showNotification('Sucesso!', 'Denúncia deletada com sucesso!', 'success');
+                    renderDashboardReports(); // Isso aqui recarrega a lista dps de deletar
+                } else {
+                    showNotification('Erro!', 'Erro ao deletar a denúncia. Tente novamente.', 'error');
+                }
+            }
         });
     });
 

@@ -12,9 +12,12 @@ var mapModule = (function() {
     var mapElement = document.getElementById('map');
     if (!mapElement) return;
 
+    // Se o mapa já foi inicializado, não reinitialize
+    if (mainMap) return;
+
     // Isso são Coordenadas iniciais 
-    var initialLat = -23.5505;
-    var initialLng = -46.6333;
+    var initialLat = -7.120354;
+    var initialLng = -34.880111;
 
     mainMap = L.map('map').setView([initialLat, initialLng], 13);
 
@@ -62,8 +65,8 @@ var mapModule = (function() {
     var mapElement = document.getElementById('map-report');
     if (!mapElement) return;
 
-    var initialLat = -23.5505;
-    var initialLng = -46.6333;
+    var initialLat = -7.120354;
+    var initialLng = -34.880111
 
     reportMap = L.map('map-report').setView([initialLat, initialLng], 13);
 
@@ -141,7 +144,7 @@ var mapModule = (function() {
    * @param {String} reportId ID da denúncia
    * @param {Number} zoom Nível de zoom
    */
-  function panToReport(reportId, zoom = 15) {
+  function panToReport(reportId, zoom = 14) {
     if (!mainMap || !reportId) return;
     var marker = markersById[reportId];
     if (!marker) return;

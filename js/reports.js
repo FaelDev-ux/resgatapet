@@ -1,5 +1,5 @@
 import { db } from "./firebase.js";
-import { collection, getDocs, addDoc, updateDoc, doc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+import { collection, getDocs, addDoc, updateDoc, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
 const COLLECTION_NAME = "reports";
 
@@ -69,6 +69,22 @@ const reports = {
       return true;
     } catch (error) {
       console.error("Erro ao atualizar status:", error);
+      return false;
+    }
+  },
+
+  /**
+   * Isso deleta as denuncia do firestore
+   * @param {String} id ID do doc q ta ligado ao firebase
+   */
+  delete: async function(id) {
+    try {
+      const reportRef = doc(db, COLLECTION_NAME, id);
+      await deleteDoc(reportRef);
+      console.log("Denúncia deletada com sucesso!");
+      return true;
+    } catch (error) {
+      console.error("Erro ao deletar denúncia:", error);
       return false;
     }
   }
