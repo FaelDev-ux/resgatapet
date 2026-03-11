@@ -77,6 +77,55 @@ var app = (function() {
   }
 
   /**
+   * Mostra popup de notificação
+   * @param {String} title Título da notificação
+   * @param {String} message Mensagem da notificação
+   * @param {String} type Tipo da notificação (success, error, warning)
+   */
+  function showNotification(title, message, type = 'success') {
+    var popup = document.getElementById('notification-popup');
+    var titleEl = document.getElementById('notification-title');
+    var messageEl = document.getElementById('notification-message');
+    var iconEl = document.querySelector('.notification-icon');
+
+    if (!popup || !titleEl || !messageEl || !iconEl) return;
+
+    // Define o ícone baseado no tipo
+    var icon = '✓';
+    if (type === 'error') icon = '✕';
+    if (type === 'warning') icon = '⚠';
+
+    iconEl.textContent = icon;
+    titleEl.textContent = title;
+    messageEl.textContent = message;
+
+    // Define a cor de acordo com o tipo
+    iconEl.style.color = type === 'success' ? '#28a745' : type === 'error' ? '#dc3545' : '#ffc107';
+
+    popup.style.display = 'flex';
+
+    // Evento para fechar
+    var closeBtn = document.querySelector('.close-notification');
+    if (closeBtn) {
+      closeBtn.onclick = function() {
+        popup.style.display = 'none';
+      };
+    }
+
+    // Fecha quando clica fora
+    popup.onclick = function(event) {
+      if (event.target === popup) {
+        popup.style.display = 'none';
+      }
+    };
+
+    // Fecha dps de 3 sec
+    setTimeout(function() {
+      popup.style.display = 'none';
+    }, 3000);
+  }
+
+  /**
    * Mostra modal para gerenciar usuários
    */
   function showManageUsersForm() {
@@ -526,7 +575,10 @@ var app = (function() {
             if (confirm('Tem certeza que deseja deletar esta denúncia?')) {
                 var success = await reports.delete(id);
                 if (success) {
+                    showNotification('Sucesso!', 'Denúncia deletada com sucesso!', 'success');
                     renderDashboardReports(); // Isso aqui recarrega a lista dps de deletar
+                } else {
+                    showNotification('Erro!', 'Erro ao deletar a denúncia. Tente novamente.', 'error');
                 }
             }
         });
